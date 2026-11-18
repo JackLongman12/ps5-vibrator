@@ -69,7 +69,7 @@ if (-not $NoUpload) {
 Write-Host "==> Packing with Velopack"
 $notesFile = Join-Path $env:TEMP "dss-notes-$Version.md"
 Set-Content -Path $notesFile -Value $(if ($Notes) { $Notes } else { "Test build $Version" })
-vpk pack --packId $PackId --packVersion $Version --packDir $PublishDir --mainExe "$PackId.exe" `
+vpk pack --packId $PackId --packVersion $Version --packDir $PublishDir --mainExe "$PackId.exe" --runtime win-x64 `
     --packTitle "DualSense Studio" --icon src\DualSenseStudio.App\Assets\app.ico --outputDir $ReleaseDir `
     --releaseNotes $notesFile
 if ($LASTEXITCODE -ne 0) { throw "vpk pack failed" }
