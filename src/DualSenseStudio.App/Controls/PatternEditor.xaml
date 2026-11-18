@@ -1,0 +1,93 @@
+<UserControl x:Class="DualSenseStudio.Controls.PatternEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:DualSenseStudio.Controls">
+    <StackPanel>
+        <!-- toolbar -->
+        <DockPanel Margin="0,0,0,8" LastChildFill="False">
+            <WrapPanel DockPanel.Dock="Left" VerticalAlignment="Center">
+                <TextBlock Text="Paint" Style="{StaticResource Label}" Margin="0,0,8,6"/>
+                <RadioButton x:Name="PaintLeft" GroupName="paint" Style="{StaticResource Chip}" IsChecked="True" Tag="Left" Checked="OnPaintChannel">
+                    <StackPanel Orientation="Horizontal"><Ellipse Width="8" Height="8" Fill="{StaticResource LeftChannelBrush}" Margin="0,0,6,0"/><TextBlock Text="Left (heavy)"/></StackPanel>
+                </RadioButton>
+                <RadioButton GroupName="paint" Style="{StaticResource Chip}" Tag="Right" Checked="OnPaintChannel">
+                    <StackPanel Orientation="Horizontal"><Ellipse Width="8" Height="8" Fill="{StaticResource RightChannelBrush}" Margin="0,0,6,0"/><TextBlock Text="Right (sharp)"/></StackPanel>
+                </RadioButton>
+                <RadioButton GroupName="paint" Style="{StaticResource Chip}" Tag="LeftTrigger" Checked="OnPaintChannel">
+                    <StackPanel Orientation="Horizontal"><Ellipse Width="8" Height="8" Fill="{StaticResource LeftTriggerBrush}" Margin="0,0,6,0"/><TextBlock Text="L2 vibration"/></StackPanel>
+                </RadioButton>
+                <RadioButton GroupName="paint" Style="{StaticResource Chip}" Tag="RightTrigger" Checked="OnPaintChannel">
+                    <StackPanel Orientation="Horizontal"><Ellipse Width="8" Height="8" Fill="{StaticResource RightTriggerBrush}" Margin="0,0,6,0"/><TextBlock Text="R2 vibration"/></StackPanel>
+                </RadioButton>
+            </WrapPanel>
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Top">
+                <Button x:Name="UndoButton" Content="Undo" Style="{StaticResource GhostButton}" Click="OnUndo" IsEnabled="False"/>
+                <Button x:Name="PlayButton" Content="▶  Play loop" Style="{StaticResource SolidButton}" Click="OnPlay" Margin="0,0,0,6"/>
+            </StackPanel>
+        </DockPanel>
+
+        <c:PatternView x:Name="View" Height="190" Editable="True"/>
+        <DockPanel Margin="0,6,0,12">
+            <TextBlock x:Name="InfoText" Style="{StaticResource Muted}" DockPanel.Dock="Left"/>
+            <TextBlock Style="{StaticResource Muted}" HorizontalAlignment="Right" Text="Left-drag to draw · right-drag to erase"/>
+        </DockPanel>
+
+        <!-- tools -->
+        <UniformGrid Columns="2">
+            <Border Style="{StaticResource Card}" Margin="0,0,6,12" Padding="12">
+                <StackPanel>
+                    <TextBlock Text="Trim" Style="{StaticResource H2}"/>
+                    <DockPanel><TextBlock Text="Start" Style="{StaticResource Label}" Width="40"/><TextBlock x:Name="TrimStartText" DockPanel.Dock="Right" Width="48" TextAlignment="Right" Style="{StaticResource Muted}"/><Slider x:Name="TrimStart" Minimum="0" Maximum="10" ValueChanged="OnTrimChanged"/></DockPanel>
+                    <DockPanel><TextBlock Text="End" Style="{StaticResource Label}" Width="40"/><TextBlock x:Name="TrimEndText" DockPanel.Dock="Right" Width="48" TextAlignment="Right" Style="{StaticResource Muted}"/><Slider x:Name="TrimEnd" Minimum="0" Maximum="10" ValueChanged="OnTrimChanged"/></DockPanel>
+                    <Button Content="Apply trim" Style="{StaticResource GhostButton}" HorizontalAlignment="Left" Margin="0,6,0,0" Click="OnTrim"/>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}" Margin="6,0,0,12" Padding="12">
+                <StackPanel>
+                    <TextBlock Text="Loop length (time-stretch)" Style="{StaticResource H2}"/>
+                    <DockPanel><TextBlock x:Name="LengthText" DockPanel.Dock="Right" Width="48" TextAlignment="Right" Style="{StaticResource Muted}"/><Slider x:Name="LengthSlider" Minimum="0.5" Maximum="60" Value="4" ValueChanged="OnLengthChanged"/></DockPanel>
+                    <TextBlock Style="{StaticResource Muted}" Text="Squeezes or stretches the whole loop to the new length."/>
+                    <Button Content="Apply length" Style="{StaticResource GhostButton}" HorizontalAlignment="Left" Margin="0,6,0,0" Click="OnStretch"/>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}" Margin="0,0,6,12" Padding="12">
+                <StackPanel>
+                    <TextBlock Text="Quantize to beat" Style="{StaticResource H2}"/>
+                    <DockPanel><TextBlock Text="BPM" Style="{StaticResource Label}" Width="40"/><TextBlock x:Name="BpmText" DockPanel.Dock="Right" Width="48" TextAlignment="Right" Style="{StaticResource Muted}"/><Slider x:Name="BpmSlider" Minimum="40" Maximum="240" Value="120" IsSnapToTickEnabled="True" TickFrequency="1" ValueChanged="OnBpmChanged"/></DockPanel>
+                    <WrapPanel Margin="0,4,0,0">
+                        <TextBlock Text="Steps per beat" Style="{StaticResource Label}"/>
+                        <RadioButton GroupName="steps" Style="{StaticResource Chip}" Content="1" Tag="1"/>
+                        <RadioButton GroupName="steps" Style="{StaticResource Chip}" Content="2" Tag="2" IsChecked="True" x:Name="Steps2"/>
+                        <RadioButton GroupName="steps" Style="{StaticResource Chip}" Content="4" Tag="4" x:Name="Steps4"/>
+                        <RadioButton GroupName="steps" Style="{StaticResource Chip}" Content="8" Tag="8" x:Name="Steps8"/>
+                    </WrapPanel>
+                    <Button Content="Apply quantize" Style="{StaticResource GhostButton}" HorizontalAlignment="Left" Click="OnQuantize"/>
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}" Margin="6,0,0,12" Padding="12">
+                <StackPanel>
+                    <TextBlock Text="Shape" Style="{StaticResource H2}"/>
+                    <DockPanel><TextBlock Text="Smooth" Style="{StaticResource Label}" Width="50"/><TextBlock x:Name="SmoothText" DockPanel.Dock="Right" Width="56" TextAlignment="Right" Style="{StaticResource Muted}"/><Slider x:Name="SmoothSlider" Minimum="20" Maximum="400" Value="80" ValueChanged="OnShapeChanged"/></DockPanel>
+                    <DockPanel><TextBlock Text="Gain" Style="{StaticResource Label}" Width="50"/><TextBlock x:Name="GainText" DockPanel.Dock="Right" Width="56" TextAlignment="Right" Style="{StaticResource Muted}"/><Slider x:Name="GainSlider" Minimum="0.2" Maximum="2" Value="1.2" ValueChanged="OnShapeChanged"/></DockPanel>
+                    <DockPanel><TextBlock Text="Seam" Style="{StaticResource Label}" Width="50"/><TextBlock x:Name="SeamText" DockPanel.Dock="Right" Width="56" TextAlignment="Right" Style="{StaticResource Muted}"/><Slider x:Name="SeamSlider" Minimum="20" Maximum="600" Value="150" ValueChanged="OnShapeChanged"/></DockPanel>
+                    <WrapPanel Margin="0,6,0,0">
+                        <Button Content="Smooth" Style="{StaticResource GhostButton}" Click="OnSmooth"/>
+                        <Button Content="Apply gain" Style="{StaticResource GhostButton}" Click="OnGain"/>
+                        <Button Content="Normalize" Style="{StaticResource GhostButton}" Click="OnNormalize"/>
+                        <Button Content="Crossfade seam" Style="{StaticResource GhostButton}" Click="OnSeam"/>
+                        <Button Content="Reverse" Style="{StaticResource GhostButton}" Click="OnReverse"/>
+                        <Button Content="Swap L/R" Style="{StaticResource GhostButton}" Click="OnSwap"/>
+                        <Button Content="Clear channel" Style="{StaticResource GhostButton}" Click="OnClearChannel"/>
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+        </UniformGrid>
+        <Border Style="{StaticResource Card}" Padding="12">
+            <DockPanel>
+                <TextBlock Text="Trigger vibration frequency" Style="{StaticResource Label}"/>
+                <TextBlock x:Name="FreqText" DockPanel.Dock="Right" Width="56" TextAlignment="Right" Style="{StaticResource Muted}"/>
+                <Slider x:Name="FreqSlider" Minimum="5" Maximum="200" Value="35" IsSnapToTickEnabled="True" TickFrequency="1" ValueChanged="OnFreqChanged"/>
+            </DockPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

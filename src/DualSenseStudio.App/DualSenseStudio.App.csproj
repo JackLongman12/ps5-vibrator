@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>DualSenseStudio</RootNamespace>
+    <AssemblyName>DualSenseStudio</AssemblyName>
+    <Product>DualSense Studio</Product>
+    <StartupObject>DualSenseStudio.Program</StartupObject>
+    <!-- Version is overridden by scripts/release.ps1 (-p:Version=x.y.z) -->
+    <Version>0.0.0-dev</Version>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\app.ico</ApplicationIcon>
+    <!-- WPF Fluent ThemeMode is flagged experimental -->
+    <NoWarn>$(NoWarn);WPF0001</NoWarn>
+    <!-- Needed by the LibraryImport source generator (P/Invoke) -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Custom Main (Program.cs) so Velopack can run before WPF starts -->
+    <ApplicationDefinition Remove="App.xaml" />
+    <Page Include="App.xaml" />
+    <Resource Include="Assets\app.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Velopack" Version="1.2.161" />
+    <PackageReference Include="NAudio.Wasapi" Version="3.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DualSenseStudio.Core\DualSenseStudio.Core.csproj" />
+  </ItemGroup>
+
+</Project>

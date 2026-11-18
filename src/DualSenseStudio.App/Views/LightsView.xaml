@@ -1,0 +1,56 @@
+<UserControl x:Class="DualSenseStudio.Views.LightsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="28,24,24,24">
+            <TextBlock Text="Lights" Style="{StaticResource H1}"/>
+            <TextBlock Style="{StaticResource Muted}" Margin="0,0,0,18" Text="Lightbar and player LEDs. They can react to the vibration, so you can see the pattern as well as feel it."/>
+
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Lightbar" Style="{StaticResource H2}"/>
+                    <WrapPanel x:Name="ModeChips">
+                        <RadioButton GroupName="lb" Style="{StaticResource Chip}" Content="Follow vibration" Tag="FollowVibration" Checked="OnMode"/>
+                        <RadioButton GroupName="lb" Style="{StaticResource Chip}" Content="Static colour" Tag="Static" Checked="OnMode"/>
+                        <RadioButton GroupName="lb" Style="{StaticResource Chip}" Content="Rainbow" Tag="Rainbow" Checked="OnMode"/>
+                        <RadioButton GroupName="lb" Style="{StaticResource Chip}" Content="Battery level" Tag="Battery" Checked="OnMode"/>
+                        <RadioButton GroupName="lb" Style="{StaticResource Chip}" Content="Off" Tag="Off" Checked="OnMode"/>
+                    </WrapPanel>
+                    <TextBlock Text="Colour" Style="{StaticResource Label}" Margin="0,10,0,6"/>
+                    <WrapPanel x:Name="Swatches"/>
+                    <Grid Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="90"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <DockPanel><TextBlock Text="R" Style="{StaticResource Label}" Width="18"/><Slider x:Name="RSlider" Maximum="255" ValueChanged="OnRgb"/></DockPanel>
+                            <DockPanel><TextBlock Text="G" Style="{StaticResource Label}" Width="18"/><Slider x:Name="GSlider" Maximum="255" ValueChanged="OnRgb"/></DockPanel>
+                            <DockPanel><TextBlock Text="B" Style="{StaticResource Label}" Width="18"/><Slider x:Name="BSlider" Maximum="255" ValueChanged="OnRgb"/></DockPanel>
+                        </StackPanel>
+                        <Border x:Name="Preview" Grid.Column="1" Margin="14,0,0,0" CornerRadius="10" BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Player LEDs" Style="{StaticResource H2}"/>
+                    <WrapPanel x:Name="LedChips">
+                        <RadioButton GroupName="pl" Style="{StaticResource Chip}" Content="Intensity meter" Tag="IntensityMeter" Checked="OnLedMode"/>
+                        <RadioButton GroupName="pl" Style="{StaticResource Chip}" Content="Battery" Tag="Battery" Checked="OnLedMode"/>
+                        <RadioButton GroupName="pl" Style="{StaticResource Chip}" Content="Custom" Tag="Custom" Checked="OnLedMode"/>
+                        <RadioButton GroupName="pl" Style="{StaticResource Chip}" Content="Off" Tag="Off" Checked="OnLedMode"/>
+                    </WrapPanel>
+                    <StackPanel x:Name="CustomLeds" Orientation="Horizontal" Margin="0,6,0,6"/>
+                    <WrapPanel x:Name="BrightChips">
+                        <TextBlock Text="Brightness" Style="{StaticResource Label}"/>
+                        <RadioButton GroupName="br" Style="{StaticResource Chip}" Content="High" Tag="0" Checked="OnBrightness"/>
+                        <RadioButton GroupName="br" Style="{StaticResource Chip}" Content="Medium" Tag="1" Checked="OnBrightness"/>
+                        <RadioButton GroupName="br" Style="{StaticResource Chip}" Content="Low" Tag="2" Checked="OnBrightness"/>
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,88 @@
+<UserControl x:Class="DualSenseStudio.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="28,24,24,24" MaxWidth="900" HorizontalAlignment="Left">
+            <TextBlock Text="Settings &amp; Updates" Style="{StaticResource H1}" Margin="0,0,0,18"/>
+
+            <!-- Updates -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Updates" Style="{StaticResource H2}"/>
+                    <TextBlock x:Name="VersionInfo" Foreground="{StaticResource TextBrush}"/>
+                    <TextBlock x:Name="UpdateStatusText" Style="{StaticResource Muted}" Margin="0,4,0,10"/>
+                    <WrapPanel>
+                        <Button x:Name="CheckButton" Content="Check for updates now" Style="{StaticResource SolidButton}" Click="OnCheck"/>
+                        <Button x:Name="RestartButton" Content="Restart &amp; update" Style="{StaticResource SolidButton}" Background="{StaticResource SuccessBrush}" Click="OnRestart" Visibility="Collapsed"/>
+                    </WrapPanel>
+                    <CheckBox x:Name="AutoCheck" Content="Check for updates automatically (on start and every 20 minutes)" Margin="0,12,0,4" Click="OnUpdatePrefs"/>
+                    <CheckBox x:Name="AutoDownload" Content="Download new versions in the background (you choose when to restart)" Click="OnUpdatePrefs"/>
+
+                    <Expander Header="Update source (advanced)" Margin="0,12,0,0" Foreground="{StaticResource TextBrush}">
+                        <StackPanel Margin="0,8,0,0">
+                            <TextBlock Text="GitHub repository with releases" Style="{StaticResource Label}"/>
+                            <TextBox x:Name="RepoBox" Margin="0,4,0,8"/>
+                            <TextBlock Text="Access token (needed only for a private repo, on PCs without the GitHub CLI logged in)" Style="{StaticResource Label}" TextWrapping="Wrap"/>
+                            <PasswordBox x:Name="TokenBox" Margin="0,4,0,4"/>
+                            <TextBlock x:Name="TokenSource" Style="{StaticResource Muted}"/>
+                            <WrapPanel Margin="0,8,0,0">
+                                <Button Content="Save source" Style="{StaticResource GhostButton}" Click="OnSaveSource"/>
+                                <Button Content="Clear saved token" Style="{StaticResource GhostButton}" Click="OnClearToken"/>
+                            </WrapPanel>
+                        </StackPanel>
+                    </Expander>
+                </StackPanel>
+            </Border>
+
+            <!-- Safety -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Safety" Style="{StaticResource H2}"/>
+                    <DockPanel>
+                        <TextBlock Text="Max intensity" Style="{StaticResource Label}" Width="110"/>
+                        <TextBlock x:Name="CapText" DockPanel.Dock="Right" Width="50" TextAlignment="Right" Style="{StaticResource Muted}"/>
+                        <Slider x:Name="CapSlider" Minimum="0.1" Maximum="1" ValueChanged="OnCap"/>
+                    </DockPanel>
+                    <TextBlock Style="{StaticResource Muted}" Margin="110,0,0,10" Text="A hard ceiling on all vibration (patterns, recorder, live play)."/>
+                    <DockPanel>
+                        <TextBlock Text="Auto-stop after" Style="{StaticResource Label}" Width="110"/>
+                        <TextBlock x:Name="AutoStopText" DockPanel.Dock="Right" Width="50" TextAlignment="Right" Style="{StaticResource Muted}"/>
+                        <Slider x:Name="AutoStopSlider" Minimum="0" Maximum="120" IsSnapToTickEnabled="True" TickFrequency="5" ValueChanged="OnAutoStop"/>
+                    </DockPanel>
+                    <TextBlock Style="{StaticResource Muted}" Margin="110,0,0,0" Text="Stops playback after this many minutes. 0 = never. Ctrl+Alt+S stops everything from any app, and so does the controller's mute button."/>
+                </StackPanel>
+            </Border>
+
+            <!-- Controller -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Controller" Style="{StaticResource H2}"/>
+                    <CheckBox x:Name="ShortcutsCheck" Content="Controller shortcuts" Click="OnShortcuts"/>
+                    <TextBlock Style="{StaticResource Muted}" Margin="26,2,0,12" Text="Options = play/stop · D-pad ◀ ▶ = previous/next preset · ▲ ▼ = intensity · Create = record · Mute = stop everything (always on)"/>
+                    <WrapPanel x:Name="RumbleChips">
+                        <TextBlock Text="Rumble mode" Style="{StaticResource Label}"/>
+                        <RadioButton GroupName="rm" Style="{StaticResource Chip}" Content="Auto" Tag="Auto" Checked="OnRumble"/>
+                        <RadioButton GroupName="rm" Style="{StaticResource Chip}" Content="Modern (v2)" Tag="V2" Checked="OnRumble"/>
+                        <RadioButton GroupName="rm" Style="{StaticResource Chip}" Content="Legacy (v1)" Tag="Legacy" Checked="OnRumble"/>
+                    </WrapPanel>
+                    <TextBlock Style="{StaticResource Muted}" Text="Auto picks based on the controller firmware. If vibration feels weak or missing, try the other mode."/>
+                    <WrapPanel Margin="0,12,0,0">
+                        <Button Content="Test rumble" Style="{StaticResource GhostButton}" Click="OnTest"/>
+                        <Button Content="Reconnect" Style="{StaticResource GhostButton}" Click="OnReconnect"/>
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Data -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Data" Style="{StaticResource H2}"/>
+                    <TextBlock x:Name="DataPath" Style="{StaticResource Muted}" Margin="0,0,0,8"/>
+                    <WrapPanel>
+                        <Button Content="Open data folder" Style="{StaticResource GhostButton}" Click="OnOpenData"/>
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

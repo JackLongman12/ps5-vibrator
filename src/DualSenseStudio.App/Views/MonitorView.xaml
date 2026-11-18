@@ -1,0 +1,73 @@
+<UserControl x:Class="DualSenseStudio.Views.MonitorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="28,24,24,24">
+            <TextBlock Text="Input Monitor" Style="{StaticResource H1}"/>
+            <TextBlock Style="{StaticResource Muted}" Margin="0,0,0,18" Text="Everything the controller is reporting, live. Handy for checking the connection, triggers and sensors."/>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="Triggers" Style="{StaticResource H2}"/>
+                            <DockPanel><TextBlock Text="L2" Width="30" Style="{StaticResource Muted}"/><TextBlock x:Name="L2Text" DockPanel.Dock="Right" Width="36" TextAlignment="Right" Style="{StaticResource Muted}"/><ProgressBar x:Name="L2Bar" Style="{StaticResource Meter}" Height="12" Foreground="{StaticResource LeftTriggerBrush}"/></DockPanel>
+                            <DockPanel Margin="0,8,0,0"><TextBlock Text="R2" Width="30" Style="{StaticResource Muted}"/><TextBlock x:Name="R2Text" DockPanel.Dock="Right" Width="36" TextAlignment="Right" Style="{StaticResource Muted}"/><ProgressBar x:Name="R2Bar" Style="{StaticResource Meter}" Height="12" Foreground="{StaticResource RightTriggerBrush}"/></DockPanel>
+                        </StackPanel>
+                    </Border>
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="Sticks" Style="{StaticResource H2}"/>
+                            <StackPanel Orientation="Horizontal">
+                                <Border Width="110" Height="110" CornerRadius="55" Background="#14171E" BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1" Margin="0,0,20,0">
+                                    <Canvas x:Name="LeftStick"><Ellipse x:Name="LeftDot" Width="16" Height="16" Fill="{StaticResource AccentBrush}"/></Canvas>
+                                </Border>
+                                <Border Width="110" Height="110" CornerRadius="55" Background="#14171E" BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1">
+                                    <Canvas x:Name="RightStick"><Ellipse x:Name="RightDot" Width="16" Height="16" Fill="{StaticResource RightChannelBrush}"/></Canvas>
+                                </Border>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="Buttons" Style="{StaticResource H2}"/>
+                            <WrapPanel x:Name="ButtonsPanel"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="Touchpad" Style="{StaticResource H2}"/>
+                            <Border Background="#14171E" CornerRadius="8" Height="140" BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1">
+                                <Canvas x:Name="TouchCanvas" ClipToBounds="True">
+                                    <Ellipse x:Name="T0" Width="18" Height="18" Fill="{StaticResource LeftChannelBrush}" Visibility="Collapsed"/>
+                                    <Ellipse x:Name="T1" Width="18" Height="18" Fill="{StaticResource RightChannelBrush}" Visibility="Collapsed"/>
+                                </Canvas>
+                            </Border>
+                            <TextBlock x:Name="TouchText" Style="{StaticResource Muted}" Margin="0,6,0,0"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="Motion sensors (raw)" Style="{StaticResource H2}"/>
+                            <TextBlock x:Name="GyroText" FontFamily="Consolas" Foreground="{StaticResource TextBrush}"/>
+                            <TextBlock x:Name="AccelText" FontFamily="Consolas" Foreground="{StaticResource TextBrush}" Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="Connection" Style="{StaticResource H2}"/>
+                            <TextBlock x:Name="ConnInfo" FontFamily="Consolas" Foreground="{StaticResource TextBrush}" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
