@@ -52,6 +52,14 @@ Both remove the app, its shortcuts and its Windows entry. Uninstalling from Wind
 You need the [.NET 10 SDK](https://dotnet.microsoft.com/download) on Windows.
 
 ```bash
+git clone https://github.com/JackLongman12/ps5-vibrator.git
+```
+
+```bash
+cd ps5-vibrator
+```
+
+```bash
 dotnet build DualSenseStudio.sln
 ```
 
