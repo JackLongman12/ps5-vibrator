@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+  <uses-feature android:name="android.hardware.usb.host" android:required="false" />
+  <uses-feature android:name="android.hardware.bluetooth" android:required="false" />
+  <!-- Needed for InputDevice.VibratorManager (Bluetooth rumble). -->
+  <uses-permission android:name="android.permission.VIBRATE" />
+  <application
+      android:label="DualSense Studio"
+      android:icon="@mipmap/appicon"
+      android:roundIcon="@mipmap/appicon"
+      android:theme="@android:style/Theme.Material.NoActionBar"
+      android:supportsRtl="true"
+      android:allowBackup="true" />
+</manifest>
