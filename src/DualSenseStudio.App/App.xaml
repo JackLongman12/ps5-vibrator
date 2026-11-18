@@ -5,27 +5,55 @@
              ShutdownMode="OnMainWindowClose">
     <Application.Resources>
         <ResourceDictionary>
-            <!-- Palette -->
-            <Color x:Key="AccentColor">#3D7BFF</Color>
-            <SolidColorBrush x:Key="AccentBrush" Color="#3D7BFF"/>
-            <SolidColorBrush x:Key="AccentSoftBrush" Color="#263D7BFF"/>
-            <SolidColorBrush x:Key="DangerBrush" Color="#E5484D"/>
-            <SolidColorBrush x:Key="RecordBrush" Color="#FF3B4A"/>
-            <SolidColorBrush x:Key="SuccessBrush" Color="#30A46C"/>
+            <!-- Palette: PlayStation-inspired. PS blue accent on deep navy-black surfaces;
+                 channel colours follow the face-button symbols (cross blue, circle red, square pink, triangle teal). -->
+            <Color x:Key="AccentColor">#0070D1</Color>
+            <SolidColorBrush x:Key="AccentBrush" Color="#0070D1"/>
+            <SolidColorBrush x:Key="AccentSoftBrush" Color="#330070D1"/>
+            <SolidColorBrush x:Key="DangerBrush" Color="#E5364F"/>
+            <SolidColorBrush x:Key="RecordBrush" Color="#E5364F"/>
+            <SolidColorBrush x:Key="SuccessBrush" Color="#1FBF8F"/>
             <SolidColorBrush x:Key="WarningBrush" Color="#F5A524"/>
-            <SolidColorBrush x:Key="WindowBrush" Color="#12141A"/>
-            <SolidColorBrush x:Key="SidebarBrush" Color="#0D0F14"/>
-            <SolidColorBrush x:Key="CardBrush" Color="#1A1D25"/>
-            <SolidColorBrush x:Key="CardAltBrush" Color="#222632"/>
-            <SolidColorBrush x:Key="StrokeBrush" Color="#2C3140"/>
-            <SolidColorBrush x:Key="TextBrush" Color="#ECEEF3"/>
-            <SolidColorBrush x:Key="MutedBrush" Color="#8C93A6"/>
-            <SolidColorBrush x:Key="ChipBrush" Color="#222632"/>
-            <SolidColorBrush x:Key="ChipHoverBrush" Color="#2C3140"/>
-            <SolidColorBrush x:Key="LeftChannelBrush" Color="#3D7BFF"/>
-            <SolidColorBrush x:Key="RightChannelBrush" Color="#FF8A3D"/>
-            <SolidColorBrush x:Key="LeftTriggerBrush" Color="#A66BFF"/>
-            <SolidColorBrush x:Key="RightTriggerBrush" Color="#2ED3B7"/>
+            <SolidColorBrush x:Key="WindowBrush" Color="#080C16"/>
+            <SolidColorBrush x:Key="SidebarBrush" Color="#050810"/>
+            <SolidColorBrush x:Key="CardBrush" Color="#0F1626"/>
+            <SolidColorBrush x:Key="CardAltBrush" Color="#16203A"/>
+            <SolidColorBrush x:Key="StrokeBrush" Color="#1F2C4A"/>
+            <SolidColorBrush x:Key="TextBrush" Color="#F3F6FB"/>
+            <SolidColorBrush x:Key="MutedBrush" Color="#8A97B5"/>
+            <SolidColorBrush x:Key="ChipBrush" Color="#16203A"/>
+            <SolidColorBrush x:Key="ChipHoverBrush" Color="#1E2C50"/>
+            <SolidColorBrush x:Key="PlotBrush" Color="#0A1120"/>
+            <SolidColorBrush x:Key="NavHoverBrush" Color="#0D1528"/>
+            <SolidColorBrush x:Key="NavCheckedBrush" Color="#0F2142"/>
+            <SolidColorBrush x:Key="TileActiveBrush" Color="#0B2548"/>
+            <SolidColorBrush x:Key="MeterTrackBrush" Color="#1C2944"/>
+            <SolidColorBrush x:Key="UpdateBannerBrush" Color="#06284F"/>
+            <SolidColorBrush x:Key="WarnBannerBrush" Color="#2E2414"/>
+            <SolidColorBrush x:Key="CrossBrush" Color="#5B93FF"/>
+            <SolidColorBrush x:Key="CircleBrush" Color="#FF4D6A"/>
+            <SolidColorBrush x:Key="SquareBrush" Color="#F06EB4"/>
+            <SolidColorBrush x:Key="TriangleBrush" Color="#1FC7A6"/>
+            <SolidColorBrush x:Key="LeftChannelBrush" Color="#5B93FF"/>
+            <SolidColorBrush x:Key="RightChannelBrush" Color="#FF4D6A"/>
+            <SolidColorBrush x:Key="LeftTriggerBrush" Color="#F06EB4"/>
+            <SolidColorBrush x:Key="RightTriggerBrush" Color="#1FC7A6"/>
+
+            <!-- Make the Fluent controls (sliders, checkboxes, focus) use PS blue instead of the Windows accent -->
+            <Color x:Key="{x:Static SystemColors.AccentColorKey}">#0070D1</Color>
+            <Color x:Key="{x:Static SystemColors.AccentColorLight1Key}">#1A86E6</Color>
+            <Color x:Key="{x:Static SystemColors.AccentColorLight2Key}">#2F95F0</Color>
+            <Color x:Key="{x:Static SystemColors.AccentColorLight3Key}">#5AACF5</Color>
+            <Color x:Key="{x:Static SystemColors.AccentColorDark1Key}">#005DB0</Color>
+            <Color x:Key="{x:Static SystemColors.AccentColorDark2Key}">#004A8F</Color>
+            <Color x:Key="{x:Static SystemColors.AccentColorDark3Key}">#003770</Color>
+            <SolidColorBrush x:Key="{x:Static SystemColors.AccentColorBrushKey}" Color="#0070D1"/>
+            <SolidColorBrush x:Key="{x:Static SystemColors.AccentColorLight1BrushKey}" Color="#1A86E6"/>
+            <SolidColorBrush x:Key="{x:Static SystemColors.AccentColorLight2BrushKey}" Color="#2F95F0"/>
+            <SolidColorBrush x:Key="{x:Static SystemColors.AccentColorLight3BrushKey}" Color="#5AACF5"/>
+            <SolidColorBrush x:Key="{x:Static SystemColors.AccentColorDark1BrushKey}" Color="#005DB0"/>
+            <SolidColorBrush x:Key="{x:Static SystemColors.AccentColorDark2BrushKey}" Color="#004A8F"/>
+            <SolidColorBrush x:Key="{x:Static SystemColors.AccentColorDark3BrushKey}" Color="#003770"/>
 
             <!-- Text -->
             <Style x:Key="H1" TargetType="TextBlock">
@@ -118,11 +146,11 @@
                             </Grid>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="Bd" Property="Background" Value="#161A22"/>
+                                    <Setter TargetName="Bd" Property="Background" Value="{StaticResource NavHoverBrush}"/>
                                     <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
                                 </Trigger>
                                 <Trigger Property="IsChecked" Value="True">
-                                    <Setter TargetName="Bd" Property="Background" Value="#1C2130"/>
+                                    <Setter TargetName="Bd" Property="Background" Value="{StaticResource NavCheckedBrush}"/>
                                     <Setter TargetName="Bar" Property="Visibility" Value="Visible"/>
                                     <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
                                 </Trigger>
@@ -194,7 +222,7 @@
                                 </Trigger>
                                 <Trigger Property="Tag" Value="active">
                                     <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
-                                    <Setter TargetName="Bd" Property="Background" Value="#1C2539"/>
+                                    <Setter TargetName="Bd" Property="Background" Value="{StaticResource TileActiveBrush}"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -212,7 +240,7 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="ProgressBar">
                             <Grid>
-                                <Border x:Name="PART_Track" Background="#2A2F3C" CornerRadius="4"/>
+                                <Border x:Name="PART_Track" Background="{StaticResource MeterTrackBrush}" CornerRadius="4"/>
                                 <Border x:Name="PART_Indicator" Background="{TemplateBinding Foreground}" CornerRadius="4" HorizontalAlignment="Left"/>
                             </Grid>
                         </ControlTemplate>

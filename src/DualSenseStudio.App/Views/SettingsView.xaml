@@ -49,7 +49,7 @@
                         <TextBlock x:Name="AutoStopText" DockPanel.Dock="Right" Width="50" TextAlignment="Right" Style="{StaticResource Muted}"/>
                         <Slider x:Name="AutoStopSlider" Minimum="0" Maximum="120" IsSnapToTickEnabled="True" TickFrequency="5" ValueChanged="OnAutoStop"/>
                     </DockPanel>
-                    <TextBlock Style="{StaticResource Muted}" Margin="110,0,0,0" Text="Stops playback after this many minutes. 0 = never. Ctrl+Alt+S stops everything from any app, and so does the controller's mute button."/>
+                    <TextBlock Style="{StaticResource Muted}" Margin="110,0,0,0" Text="Stops playback after this many minutes. 0 = never. Esc, Ctrl+Alt+S (from any app) or the controller's mute button stop everything."/>
                 </StackPanel>
             </Border>
 

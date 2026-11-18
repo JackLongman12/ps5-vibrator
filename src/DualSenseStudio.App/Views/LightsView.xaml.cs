@@ -10,7 +10,7 @@ public partial class LightsView : UserControl
 {
     private static readonly Color[] SwatchColors =
     [
-        Color.FromRgb(40, 110, 255), Color.FromRgb(0, 200, 255), Color.FromRgb(46, 211, 183), Color.FromRgb(48, 220, 90),
+        Color.FromRgb(0, 112, 209), Color.FromRgb(0, 200, 255), Color.FromRgb(46, 211, 183), Color.FromRgb(48, 220, 90),
         Color.FromRgb(255, 210, 0), Color.FromRgb(255, 120, 20), Color.FromRgb(255, 40, 60), Color.FromRgb(255, 60, 200),
         Color.FromRgb(150, 70, 255), Color.FromRgb(255, 255, 255),
     ];

@@ -12,14 +12,14 @@ namespace DualSenseStudio.Controls;
 /// </summary>
 public sealed class PatternView : FrameworkElement
 {
-    private static readonly Brush Bg = Freeze(new SolidColorBrush(Color.FromRgb(0x14, 0x17, 0x1E)));
+    private static readonly Brush Bg = Freeze(new SolidColorBrush(Color.FromRgb(0x0A, 0x11, 0x20)));
     private static readonly Pen GridPen = Freeze(new Pen(Freeze(new SolidColorBrush(Color.FromArgb(40, 255, 255, 255))), 1));
     private static readonly Pen PlayheadPen = Freeze(new Pen(Brushes.White, 1.5));
-    private static readonly Brush LeftFill = Freeze(new SolidColorBrush(Color.FromArgb(110, 0x3D, 0x7B, 0xFF)));
-    private static readonly Pen LeftPen = Freeze(new Pen(Freeze(new SolidColorBrush(Color.FromRgb(0x3D, 0x7B, 0xFF))), 1.5));
-    private static readonly Pen RightPen = Freeze(new Pen(Freeze(new SolidColorBrush(Color.FromRgb(0xFF, 0x8A, 0x3D))), 1.5));
-    private static readonly Pen LtPen = Freeze(new Pen(Freeze(new SolidColorBrush(Color.FromRgb(0xA6, 0x6B, 0xFF))), 1.2) { DashStyle = DashStyles.Dash });
-    private static readonly Pen RtPen = Freeze(new Pen(Freeze(new SolidColorBrush(Color.FromRgb(0x2E, 0xD3, 0xB7))), 1.2) { DashStyle = DashStyles.Dash });
+    private static readonly Brush LeftFill = Freeze(new SolidColorBrush(Color.FromArgb(105, 0x5B, 0x93, 0xFF)));
+    private static readonly Pen LeftPen = Freeze(new Pen(Freeze(new SolidColorBrush(Color.FromRgb(0x5B, 0x93, 0xFF))), 1.5));
+    private static readonly Pen RightPen = Freeze(new Pen(Freeze(new SolidColorBrush(Color.FromRgb(0xFF, 0x4D, 0x6A))), 1.5));
+    private static readonly Pen LtPen = Freeze(new Pen(Freeze(new SolidColorBrush(Color.FromRgb(0xF0, 0x6E, 0xB4))), 1.2) { DashStyle = DashStyles.Dash });
+    private static readonly Pen RtPen = Freeze(new Pen(Freeze(new SolidColorBrush(Color.FromRgb(0x1F, 0xC7, 0xA6))), 1.2) { DashStyle = DashStyles.Dash });
     private static readonly Brush LabelBrush = Freeze(new SolidColorBrush(Color.FromArgb(150, 255, 255, 255)));
     private static readonly Typeface LabelFace = new("Segoe UI");
 

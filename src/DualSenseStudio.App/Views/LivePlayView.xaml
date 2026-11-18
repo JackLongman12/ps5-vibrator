@@ -20,7 +20,7 @@
                         <DockPanel Margin="0,12,0,0"><TextBlock Text="Gain" Style="{StaticResource Label}" Width="44"/><Slider x:Name="TouchGain" Minimum="0.1" Maximum="1" Value="1" ValueChanged="OnTouchGain"/></DockPanel>
                         <Button x:Name="TouchButton" Content="▶  Start touchpad" Style="{StaticResource SolidButton}" HorizontalAlignment="Left" Margin="0,12,0,0" Click="OnTouch"/>
                     </StackPanel>
-                    <Border Grid.Column="1" Background="#14171E" CornerRadius="8" Height="160" BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1">
+                    <Border Grid.Column="1" Background="{StaticResource PlotBrush}" CornerRadius="8" Height="160" BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1">
                         <Canvas x:Name="TouchCanvas" ClipToBounds="True">
                             <Ellipse x:Name="Finger0" Width="22" Height="22" Fill="{StaticResource LeftChannelBrush}" Visibility="Collapsed"/>
                             <Ellipse x:Name="Finger1" Width="22" Height="22" Fill="{StaticResource RightChannelBrush}" Visibility="Collapsed"/>

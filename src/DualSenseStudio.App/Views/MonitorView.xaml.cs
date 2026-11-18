@@ -36,7 +36,20 @@ public partial class MonitorView : UserControl
                 CornerRadius = new CornerRadius(6),
                 Padding = new Thickness(10, 5, 10, 5),
                 Margin = new Thickness(0, 0, 6, 6),
-                Child = new TextBlock { Text = label, Foreground = (Brush)FindResource("TextBrush") },
+                Child = new TextBlock
+                {
+                    Text = label,
+                    FontWeight = flag is Buttons.Cross or Buttons.Circle or Buttons.Square or Buttons.Triangle ? FontWeights.Bold : FontWeights.Normal,
+                    // Face buttons in their PlayStation symbol colours.
+                    Foreground = (Brush)FindResource(flag switch
+                    {
+                        Buttons.Cross => "CrossBrush",
+                        Buttons.Circle => "CircleBrush",
+                        Buttons.Square => "SquareBrush",
+                        Buttons.Triangle => "TriangleBrush",
+                        _ => "TextBrush",
+                    }),
+                },
             };
             ButtonsPanel.Children.Add(chip);
             _chips.Add((flag, chip));

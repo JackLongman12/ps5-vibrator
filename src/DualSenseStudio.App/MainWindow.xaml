@@ -15,6 +15,12 @@
         <Border Background="{StaticResource SidebarBrush}" BorderBrush="{StaticResource StrokeBrush}" BorderThickness="0,0,1,0">
             <DockPanel>
                 <StackPanel DockPanel.Dock="Top" Margin="22,22,16,18">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <TextBlock Text="△" Foreground="{StaticResource TriangleBrush}" FontSize="15" FontWeight="Bold" Margin="0,0,9,0"/>
+                        <TextBlock Text="○" Foreground="{StaticResource CircleBrush}" FontSize="15" FontWeight="Bold" Margin="0,0,9,0"/>
+                        <TextBlock Text="✕" Foreground="{StaticResource CrossBrush}" FontSize="15" FontWeight="Bold" Margin="0,0,9,0"/>
+                        <TextBlock Text="□" Foreground="{StaticResource SquareBrush}" FontSize="15" FontWeight="Bold"/>
+                    </StackPanel>
                     <TextBlock Text="DualSense Studio" FontSize="18" FontWeight="SemiBold"/>
                     <TextBlock x:Name="VersionText" Text="dev build" Style="{StaticResource Muted}" Margin="0,2,0,0"/>
                 </StackPanel>
@@ -53,13 +59,13 @@
 
             <!-- Banners -->
             <StackPanel Grid.Row="0">
-                <Border x:Name="UpdateBanner" Visibility="Collapsed" Background="#1C2A4A" BorderBrush="{StaticResource AccentBrush}" BorderThickness="0,0,0,1" Padding="20,10">
+                <Border x:Name="UpdateBanner" Visibility="Collapsed" Background="{StaticResource UpdateBannerBrush}" BorderBrush="{StaticResource AccentBrush}" BorderThickness="0,0,0,1" Padding="20,10">
                     <DockPanel>
                         <Button x:Name="UpdateAction" DockPanel.Dock="Right" Style="{StaticResource SolidButton}" Margin="0" Padding="14,6" Click="OnUpdateAction"/>
                         <TextBlock x:Name="UpdateText" VerticalAlignment="Center" TextWrapping="Wrap"/>
                     </DockPanel>
                 </Border>
-                <Border x:Name="WarnBanner" Visibility="Collapsed" Background="#33291A" BorderBrush="{StaticResource WarningBrush}" BorderThickness="0,0,0,1" Padding="20,10">
+                <Border x:Name="WarnBanner" Visibility="Collapsed" Background="{StaticResource WarnBannerBrush}" BorderBrush="{StaticResource WarningBrush}" BorderThickness="0,0,0,1" Padding="20,10">
                     <DockPanel>
                         <Button DockPanel.Dock="Right" Content="Dismiss" Style="{StaticResource GhostButton}" Margin="0" Click="OnDismissWarn"/>
                         <TextBlock x:Name="WarnText" VerticalAlignment="Center" TextWrapping="Wrap"/>
