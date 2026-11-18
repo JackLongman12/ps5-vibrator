@@ -32,6 +32,15 @@ The app updates itself. It checks GitHub on start and every 20 minutes, download
   <img src="docs/trigger-lab.png" width="49%" alt="Trigger Lab">
 </p>
 
+## Uninstall
+
+Use either of these:
+
+- In the app, go to **Settings & Updates → Uninstall** and click **Uninstall DualSense Studio…**. Tick *Also delete my saved patterns and settings* for a clean removal.
+- In Windows, go to **Settings → Apps → Installed apps → DualSense Studio → Uninstall**.
+
+Both remove the app, its shortcuts and its Windows entry. Uninstalling from Windows Settings keeps your patterns in `%AppData%\DualSenseStudio`. Delete that folder by hand if you don't want them.
+
 ## Troubleshooting
 
 - **No vibration or triggers while Steam is open:** Steam Input can take over the controller. Turn off *PlayStation Controller Support* in Steam → Settings → Controller, or close Steam. DS4Windows and DSX can conflict in the same way. The app warns you when any of them are running.

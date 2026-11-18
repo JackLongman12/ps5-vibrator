@@ -13,7 +13,9 @@ public static class Program
     public static void Main(string[] args)
     {
         // Must run first: handles Velopack install/update/uninstall hooks and exits early when needed.
-        VelopackApp.Build().Run();
+        VelopackApp.Build()
+            .OnBeforeUninstallFastCallback(_ => Services.Uninstaller.CleanUpDataIfRequested())
+            .Run();
 
         // One instance only: two copies would fight over the controller's output reports.
         using var mutex = new Mutex(initiallyOwned: true, MutexName, out bool isFirst);

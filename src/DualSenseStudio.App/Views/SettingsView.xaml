@@ -83,6 +83,17 @@
                     </WrapPanel>
                 </StackPanel>
             </Border>
+
+            <!-- Uninstall -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Uninstall" Style="{StaticResource H2}"/>
+                    <TextBlock Style="{StaticResource Muted}" Margin="0,0,0,10"
+                               Text="Removes the app, its shortcuts and its entry in Windows Installed apps. You can also uninstall from Windows Settings → Apps → Installed apps."/>
+                    <CheckBox x:Name="RemoveDataCheck" Content="Also delete my saved patterns and settings" Margin="0,0,0,10"/>
+                    <Button x:Name="UninstallButton" Content="Uninstall DualSense Studio…" Style="{StaticResource DangerButton}" HorizontalAlignment="Left" Click="OnUninstall"/>
+                </StackPanel>
+            </Border>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

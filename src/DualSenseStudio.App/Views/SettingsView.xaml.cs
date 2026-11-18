@@ -148,6 +148,26 @@ public partial class SettingsView : UserControl
         AppHost.Controllers.TryConnect();
     }
 
+    private void OnUninstall(object sender, RoutedEventArgs e)
+    {
+        bool removeData = RemoveDataCheck.IsChecked == true;
+        var what = removeData
+            ? "DualSense Studio and all your saved patterns and settings will be removed. This can't be undone."
+            : $"DualSense Studio will be removed. Your saved patterns and settings stay in:\n{AppPaths.DataDir}";
+        var answer = MessageBox.Show(Window.GetWindow(this), what + "\n\nUninstall now?", "Uninstall DualSense Studio",
+            MessageBoxButton.OKCancel, removeData ? MessageBoxImage.Warning : MessageBoxImage.Question, MessageBoxResult.Cancel);
+        if (answer != MessageBoxResult.OK) return;
+
+        AppHost.Playback.Stop();
+        S.Save();
+        if (!Uninstaller.Start(removeData, out var error))
+        {
+            MessageBox.Show(Window.GetWindow(this), error, "Uninstall");
+            return;
+        }
+        Application.Current.Shutdown();
+    }
+
     private void OnOpenData(object sender, RoutedEventArgs e)
     {
         System.IO.Directory.CreateDirectory(AppPaths.DataDir);

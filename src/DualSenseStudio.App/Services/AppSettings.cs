@@ -100,6 +100,7 @@ public sealed class AppSettings
 
     public void Save()
     {
+        if (Uninstaller.InProgress) return;
         try
         {
             Directory.CreateDirectory(AppPaths.DataDir);
