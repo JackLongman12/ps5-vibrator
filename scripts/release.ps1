@@ -23,7 +23,7 @@ Set-Location $root
 
 $VpkVersion = '1.2.161'          # keep in sync with the Velopack package in DualSenseStudio.App.csproj
 $PackId     = 'DualSenseStudio'
-$RepoUrl    = 'https://github.com/JackLongman12/dualsense-studio'
+$RepoUrl    = 'https://github.com/JackLongman12/ps5-vibrator'
 $VersionFile = Join-Path $root 'version.txt'
 $PublishDir  = Join-Path $root 'artifacts\publish'
 $ReleaseDir  = Join-Path $root 'releases'
@@ -46,11 +46,20 @@ if (-not ($toolList | Select-String -Pattern "^vpk\s+$([regex]::Escape($VpkVersi
 }
 $env:Path += ";$env:USERPROFILE\.dotnet\tools"
 
-$token = $null
+# The token goes to vpk through the VPK_TOKEN environment variable, never on a command line
+# (command lines are visible to other processes). It is cleared again when the script ends.
 if (-not $NoUpload) {
     $token = (gh auth token).Trim()
     if (-not $token) { throw "GitHub CLI is not logged in. Run: gh auth login" }
+    $env:VPK_TOKEN = $token
+    Remove-Variable token
 }
+
+try {
+# --- test ----------------------------------------------------------------------
+Write-Host "==> Running tests"
+dotnet test DualSenseStudio.sln -c Release -nologo -v q
+if ($LASTEXITCODE -ne 0) { throw "Tests failed; not releasing." }
 
 # --- build ---------------------------------------------------------------------
 Write-Host "==> Publishing (self-contained win-x64)"
@@ -63,7 +72,7 @@ if ($LASTEXITCODE -ne 0) { throw "dotnet publish failed" }
 New-Item -ItemType Directory -Force $ReleaseDir | Out-Null
 if (-not $NoUpload) {
     Write-Host "==> Fetching previous release (for delta updates)"
-    vpk download github --repoUrl $RepoUrl --token $token --outputDir $ReleaseDir --pre 2>$null
+    vpk download github --repoUrl $RepoUrl --outputDir $ReleaseDir 2>$null
 }
 
 Write-Host "==> Packing with Velopack"
@@ -83,9 +92,13 @@ if ($NoUpload) {
 
 # --- upload --------------------------------------------------------------------
 Write-Host "==> Uploading GitHub release v$Version"
-vpk upload github --repoUrl $RepoUrl --token $token --outputDir $ReleaseDir `
+vpk upload github --repoUrl $RepoUrl --outputDir $ReleaseDir `
     --publish --releaseName "DualSense Studio $Version" --tag "v$Version" --merge
 if ($LASTEXITCODE -ne 0) { throw "vpk upload failed" }
 
 Write-Host "==> Released v$Version. Installed copies will pick it up automatically." -ForegroundColor Green
 Write-Host "    First-time install: download $PackId-win-Setup.exe from $RepoUrl/releases/latest"
+}
+finally {
+    Remove-Item Env:VPK_TOKEN -ErrorAction SilentlyContinue
+}

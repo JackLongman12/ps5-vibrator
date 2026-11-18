@@ -65,6 +65,42 @@ public sealed class Pattern
         }
     }
 
+    public const int MinSampleRate = 10;
+    public const int MaxSampleRate = 1000;
+    /// <summary>Longest pattern accepted from disk (10 minutes).</summary>
+    public const double MaxDurationSeconds = 600;
+    public const int MaxNameLength = 100;
+    public const int MaxDescriptionLength = 500;
+
+    /// <summary>True when <paramref name="id"/> is a 32-char lowercase hex id (safe to use as a file name).</summary>
+    public static bool IsValidId(string? id) =>
+        id is { Length: 32 } && id.All(ch => ch is >= '0' and <= '9' or >= 'a' and <= 'f');
+
+    /// <summary>
+    /// Makes a pattern loaded from an untrusted file safe to use: valid id, bounded sizes and text,
+    /// sane sample rate and trigger frequency, and all channels the same length as Left.
+    /// Returns false if the pattern is unusable.
+    /// </summary>
+    public bool Sanitize()
+    {
+        Left ??= [];
+        Right ??= [];
+        LeftTrigger ??= [];
+        RightTrigger ??= [];
+        if (!IsValidId(Id)) Id = Guid.NewGuid().ToString("N");
+        SampleRate = Math.Clamp(SampleRate, MinSampleRate, MaxSampleRate);
+        int maxSamples = (int)(MaxDurationSeconds * SampleRate);
+        if (Left.Length == 0 || Left.Length > maxSamples) return false;
+        Name = Clip(string.IsNullOrWhiteSpace(Name) ? "Untitled" : Name.Trim(), MaxNameLength);
+        Category = Clip(Category ?? "Custom", 40);
+        Description = Clip(Description ?? "", MaxDescriptionLength);
+        TriggerFrequency = Math.Clamp(TriggerFrequency, 1, 255);
+        Normalize();
+        return true;
+    }
+
+    private static string Clip(string s, int max) => s.Length <= max ? s : s[..max];
+
     /// <summary>Makes all channels the same length as Left (repairs older / hand-edited files).</summary>
     public void Normalize()
     {

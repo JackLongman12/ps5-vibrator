@@ -36,6 +36,8 @@ public static class AppHost
             MasterCap = Settings.MasterCap,
             RumbleMode = Settings.RumbleMode,
             Lights = Settings.Lights,
+            LeftTrigger = Settings.LeftTrigger ?? Core.Protocol.TriggerConfig.Off,
+            RightTrigger = Settings.RightTrigger ?? Core.Protocol.TriggerConfig.Off,
         };
         Playback = new Playback(Engine, Settings);
         Updates = new UpdateService(Settings);

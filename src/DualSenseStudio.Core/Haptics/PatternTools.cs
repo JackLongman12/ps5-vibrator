@@ -107,12 +107,15 @@ public static class PatternTools
         if (n < 4) return src.Clone();
         return Map(src, d =>
         {
+            // Ease the last f samples toward the loop's first sample, so playback flows
+            // from the end straight back into the start without a jump.
             var r = (byte[])d.Clone();
             for (int i = 0; i < f; i++)
             {
-                double t = (double)(i + 1) / (f + 1);
+                double t = (double)(i + 1) / f;
+                double ease = t * t * (3 - 2 * t);
                 int idx = n - f + i;
-                r[idx] = (byte)Math.Round(d[idx] * (1 - t) + d[i] * t);
+                r[idx] = (byte)Math.Round(d[idx] * (1 - ease) + d[0] * ease);
             }
             return r;
         });

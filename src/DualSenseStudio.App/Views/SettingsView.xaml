@@ -22,7 +22,7 @@
                         <StackPanel Margin="0,8,0,0">
                             <TextBlock Text="GitHub repository with releases" Style="{StaticResource Label}"/>
                             <TextBox x:Name="RepoBox" Margin="0,4,0,8"/>
-                            <TextBlock Text="Access token (needed only for a private repo, on PCs without the GitHub CLI logged in)" Style="{StaticResource Label}" TextWrapping="Wrap"/>
+                            <TextBlock Text="Access token (only needed if you point updates at a private repository; use a read-only, fine-grained token)" Style="{StaticResource Label}" TextWrapping="Wrap"/>
                             <PasswordBox x:Name="TokenBox" Margin="0,4,0,4"/>
                             <TextBlock x:Name="TokenSource" Style="{StaticResource Muted}"/>
                             <WrapPanel Margin="0,8,0,0">

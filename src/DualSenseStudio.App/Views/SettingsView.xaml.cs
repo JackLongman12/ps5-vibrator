@@ -77,8 +77,8 @@ public partial class SettingsView : UserControl
 
     private void OnSaveSource(object sender, RoutedEventArgs e)
     {
-        var repo = RepoBox.Text.Trim();
-        if (!repo.StartsWith("https://github.com/", StringComparison.OrdinalIgnoreCase))
+        var repo = RepoBox.Text.Trim().TrimEnd('/');
+        if (!UpdateService.IsValidRepoUrl(repo))
         {
             MessageBox.Show("The repository must be a https://github.com/owner/name URL.", "Update source");
             return;

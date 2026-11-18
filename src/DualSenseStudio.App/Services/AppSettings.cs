@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using DualSenseStudio.Core.Haptics;
+using DualSenseStudio.Core.Protocol;
 
 namespace DualSenseStudio.Services;
 
@@ -33,6 +34,18 @@ public sealed class AppSettings
     public bool ControllerShortcuts { get; set; } = true;
     public RumbleMode RumbleMode { get; set; } = RumbleMode.Auto;
     public LightSettings Lights { get; set; } = new();
+
+    // Trigger Lab (restored on start)
+    public TriggerConfig LeftTrigger { get; set; } = TriggerConfig.Off;
+    public TriggerConfig RightTrigger { get; set; } = TriggerConfig.Off;
+
+    // Window
+    public double? WindowLeft { get; set; }
+    public double? WindowTop { get; set; }
+    public double? WindowWidth { get; set; }
+    public double? WindowHeight { get; set; }
+    public bool WindowMaximized { get; set; }
+    public string LastPage { get; set; } = "presets";
 
     // Player
     public double Speed { get; set; } = 1.0;
@@ -73,7 +86,13 @@ public sealed class AppSettings
         try
         {
             if (File.Exists(AppPaths.SettingsFile))
-                return JsonSerializer.Deserialize<AppSettings>(File.ReadAllText(AppPaths.SettingsFile), Json) ?? new AppSettings();
+            {
+                var s = JsonSerializer.Deserialize<AppSettings>(File.ReadAllText(AppPaths.SettingsFile), Json) ?? new AppSettings();
+                // The release repo was renamed: move saved settings off the old default feed.
+                if (UpdateService.LegacyRepoUrls.Contains(s.UpdateRepoUrl.TrimEnd('/'), StringComparer.OrdinalIgnoreCase))
+                    s.UpdateRepoUrl = UpdateService.DefaultRepoUrl;
+                return s;
+            }
         }
         catch { }
         return new AppSettings();

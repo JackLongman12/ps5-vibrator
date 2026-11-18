@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Velopack;
 using Velopack.Sources;
 
@@ -8,11 +7,14 @@ public enum UpdateStatus { NotInstalled, Idle, Checking, UpToDate, Downloading, 
 
 /// <summary>
 /// Auto-update through Velopack + GitHub Releases. Releases are produced by scripts/release.ps1.
-/// Works for a private repo when a token is available (settings, or the GitHub CLI's login on this PC).
+/// The release repo is public; a token is only used if the user saves one in Settings (e.g. for a private fork).
 /// </summary>
 public sealed class UpdateService
 {
-    public const string DefaultRepoUrl = "https://github.com/JackLongman12/dualsense-studio";
+    public const string DefaultRepoUrl = "https://github.com/JackLongman12/ps5-vibrator";
+
+    /// <summary>Earlier default feed URLs; settings still pointing at one are moved to <see cref="DefaultRepoUrl"/>.</summary>
+    public static readonly string[] LegacyRepoUrls = ["https://github.com/JackLongman12/dualsense-studio"];
 
     private readonly AppSettings _settings;
     private UpdateManager? _mgr;
@@ -49,7 +51,8 @@ public sealed class UpdateService
     private UpdateManager CreateManager()
     {
         var token = ResolveToken();
-        var source = new GithubSource(_settings.UpdateRepoUrl, token, prerelease: true);
+        var repo = IsValidRepoUrl(_settings.UpdateRepoUrl) ? _settings.UpdateRepoUrl : DefaultRepoUrl;
+        var source = new GithubSource(repo, token, prerelease: false);
         return new UpdateManager(source);
     }
 
@@ -68,45 +71,25 @@ public sealed class UpdateService
         Changed?.Invoke();
     }
 
-    public string TokenSourceDescription
-    {
-        get
-        {
-            if (!string.IsNullOrEmpty(_settings.GitHubToken)) return "token saved in Settings";
-            return GhCliToken() != null ? "GitHub CLI login on this PC" : "none (works only if the repo is public)";
-        }
-    }
+    public string TokenSourceDescription =>
+        string.IsNullOrEmpty(_settings.GitHubToken)
+            ? "none (public repository, no token needed)"
+            : "token saved in Settings (encrypted for your Windows account)";
 
-    private string? ResolveToken() => _settings.GitHubToken ?? GhCliToken();
+    /// <summary>
+    /// Only a token the user explicitly saved is used. The release repo is public, so normally none is sent.
+    /// (Earlier builds borrowed the GitHub CLI's login; that token has broad scopes, so it is no longer used.)
+    /// </summary>
+    private string? ResolveToken() => _settings.GitHubToken;
 
-    private static string? _ghToken;
-    private static bool _ghChecked;
-
-    private static string? GhCliToken()
-    {
-        if (_ghChecked) return _ghToken;
-        _ghChecked = true;
-        try
-        {
-            var psi = new ProcessStartInfo("gh", "auth token")
-            {
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true,
-            };
-            using var p = Process.Start(psi);
-            if (p == null) return null;
-            var output = p.StandardOutput.ReadToEnd().Trim();
-            p.WaitForExit(5000);
-            _ghToken = p.ExitCode == 0 && output.Length > 0 ? output : null;
-        }
-        catch
-        {
-            _ghToken = null;
-        }
-        return _ghToken;
-    }
+    /// <summary>Accepts only https://github.com/{owner}/{repo} so the update feed can't be pointed at another host.</summary>
+    public static bool IsValidRepoUrl(string url) =>
+        Uri.TryCreate(url, UriKind.Absolute, out var u) &&
+        u.Scheme == Uri.UriSchemeHttps &&
+        u.Host.Equals("github.com", StringComparison.OrdinalIgnoreCase) &&
+        u.AbsolutePath.Trim('/').Split('/') is { Length: 2 } parts &&
+        parts.All(p => p.Length > 0 && p.All(ch => char.IsAsciiLetterOrDigit(ch) || ch is '-' or '_' or '.')) &&
+        string.IsNullOrEmpty(u.Query) && string.IsNullOrEmpty(u.Fragment) && string.IsNullOrEmpty(u.UserInfo);
 
     /// <summary>Checks GitHub for a newer release and (optionally) downloads it in the background.</summary>
     public async Task CheckAsync(bool download)

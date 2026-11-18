@@ -40,6 +40,7 @@ public partial class MainWindow : Window
         _pages["monitor"] = new MonitorView();
         _pages["settings"] = new SettingsView();
         Page.Content = _pages["presets"];
+        RestorePlacement();
 
         _loadingSliders = true;
         IntensitySlider.Value = AppHost.Playback.Intensity;
@@ -66,11 +67,71 @@ public partial class MainWindow : Window
 
         Loaded += (_, _) =>
         {
+            Navigate(AppHost.Settings.LastPage);
             UpdateConnection();
             UpdateUpdateBanner();
             SlowTick();
         };
-        Closing += (_, _) => AppHost.Settings.Save();
+        Closing += (_, _) =>
+        {
+            SavePlacement();
+            AppHost.Settings.Save();
+        };
+        PreviewKeyDown += (_, e) =>
+        {
+            // Esc stops everything, unless you're typing in a text box.
+            if (e.Key == System.Windows.Input.Key.Escape && e.OriginalSource is not TextBox and not PasswordBox)
+            {
+                PanicStop("Stopped (Esc)");
+                e.Handled = true;
+            }
+        };
+    }
+
+    /// <summary>Called when the app is launched a second time.</summary>
+    public void BringToFront()
+    {
+        if (WindowState == WindowState.Minimized) WindowState = WindowState.Normal;
+        Show();
+        Activate();
+        Topmost = true;
+        Topmost = false;
+        Focus();
+    }
+
+    private void RestorePlacement()
+    {
+        var s = AppHost.Settings;
+        if (s.WindowWidth is { } w && s.WindowHeight is { } h && s.WindowLeft is { } l && s.WindowTop is { } t)
+        {
+            // Only restore if the window would still be visible (monitor setups change).
+            var screen = new Rect(SystemParameters.VirtualScreenLeft, SystemParameters.VirtualScreenTop,
+                SystemParameters.VirtualScreenWidth, SystemParameters.VirtualScreenHeight);
+            var rect = new Rect(l, t, Math.Max(MinWidth, w), Math.Max(MinHeight, h));
+            if (screen.IntersectsWith(new Rect(rect.Left + 50, rect.Top, Math.Max(1, rect.Width - 100), 40)))
+            {
+                WindowStartupLocation = WindowStartupLocation.Manual;
+                Left = rect.Left;
+                Top = rect.Top;
+                Width = rect.Width;
+                Height = rect.Height;
+            }
+        }
+        if (s.WindowMaximized) WindowState = WindowState.Maximized;
+    }
+
+    private void SavePlacement()
+    {
+        var s = AppHost.Settings;
+        var r = WindowState == WindowState.Normal ? new Rect(Left, Top, Width, Height) : RestoreBounds;
+        if (r.Width > 0 && r.Height > 0)
+        {
+            s.WindowLeft = r.Left;
+            s.WindowTop = r.Top;
+            s.WindowWidth = r.Width;
+            s.WindowHeight = r.Height;
+        }
+        s.WindowMaximized = WindowState == WindowState.Maximized;
     }
 
     // ---- navigation ---------------------------------------------------------------
@@ -86,6 +147,7 @@ public partial class MainWindow : Window
         var button = Nav.Children.OfType<RadioButton>().FirstOrDefault(b => (string)b.Tag == key);
         if (button != null && button.IsChecked != true) button.IsChecked = true; // re-enters via Checked
         Page.Content = page;
+        AppHost.Settings.LastPage = key;
     }
 
     // ---- hotkey -------------------------------------------------------------------
@@ -252,6 +314,9 @@ public partial class MainWindow : Window
         ConnDetail.Text = stale ? "Connected, but no input received recently." : battery;
         BatteryBar.Visibility = input.FullReport ? Visibility.Visible : Visibility.Collapsed;
         BatteryBar.Value = input.BatteryPercent / 100.0;
+        bool low = input.FullReport && !input.Charging && input.BatteryPercent <= 15;
+        BatteryBar.Foreground = (System.Windows.Media.Brush)FindResource(low ? "DangerBrush" : "SuccessBrush");
+        if (low && !stale) ConnDetail.Text = $"Battery low ({input.BatteryPercent}%): plug in to keep playing";
     }
 
     public void ShowToast(string text)

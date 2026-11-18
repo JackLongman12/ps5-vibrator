@@ -13,6 +13,10 @@ public partial class TriggerLabView : UserControl
     public TriggerLabView()
     {
         InitializeComponent();
+        _syncing = true;
+        LeftPanel.Load(AppHost.Engine.LeftTrigger);
+        RightPanel.Load(AppHost.Engine.RightTrigger);
+        _syncing = false;
         LeftPanel.Changed += c => OnPanelChanged(c, left: true);
         RightPanel.Changed += c => OnPanelChanged(c, left: false);
         _timer = new DispatcherTimer(DispatcherPriority.Render) { Interval = TimeSpan.FromMilliseconds(33) };
@@ -39,6 +43,15 @@ public partial class TriggerLabView : UserControl
             AppHost.Engine.LeftTrigger = c;
             AppHost.Engine.RightTrigger = c;
         }
+        Persist();
+    }
+
+    /// <summary>Remember the trigger setup so it's restored next launch.</summary>
+    private static void Persist()
+    {
+        AppHost.Settings.LeftTrigger = AppHost.Engine.LeftTrigger;
+        AppHost.Settings.RightTrigger = AppHost.Engine.RightTrigger;
+        AppHost.Settings.Save();
     }
 
     private void OnQuick(object sender, RoutedEventArgs e)
@@ -61,5 +74,6 @@ public partial class TriggerLabView : UserControl
         _syncing = false;
         AppHost.Engine.LeftTrigger = c;
         AppHost.Engine.RightTrigger = c;
+        Persist();
     }
 }

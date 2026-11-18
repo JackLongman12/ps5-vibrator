@@ -111,7 +111,7 @@
                         <ProgressBar x:Name="OutR" Style="{StaticResource Meter}" Foreground="{StaticResource RightChannelBrush}"/>
                     </StackPanel>
                     <Button Grid.Column="4" Content="■  STOP" Style="{StaticResource DangerButton}" Padding="22,12" Margin="0" Click="OnStop"
-                            ToolTip="Stop everything (Ctrl+Alt+S anywhere, or the controller's mute button)"/>
+                            ToolTip="Stop everything (Esc, Ctrl+Alt+S from any app, or the controller's mute button)"/>
                 </Grid>
             </Border>
         </Grid>
