@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-android</TargetFramework>
+    <!-- USB host works from API 21; Bluetooth rumble/lights (InputDevice.VibratorManager / LightsManager) need API 31 and are checked at runtime. -->
+    <SupportedOSPlatformVersion>26</SupportedOSPlatformVersion>
+    <OutputType>Exe</OutputType>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <!-- "DualSenseStudio.Android" as a namespace would shadow the Android.* bindings. -->
+    <RootNamespace>DualSenseStudio.Droid</RootNamespace>
+    <AssemblyName>DualSenseStudio.Android</AssemblyName>
+    <ApplicationId>io.github.jacklongman12.dualsensestudio</ApplicationId>
+    <ApplicationTitle>DualSense Studio</ApplicationTitle>
+    <ApplicationVersion>1</ApplicationVersion>
+    <ApplicationDisplayVersion>0.1.0</ApplicationDisplayVersion>
+    <AndroidPackageFormat>apk</AndroidPackageFormat>
+    <!-- One APK that installs on phones (arm64), older phones (arm) and emulators (x64). -->
+    <RuntimeIdentifiers>android-arm64;android-arm;android-x64</RuntimeIdentifiers>
+    <!-- Where `-t:InstallAndroidDependencies -p:JavaSdkDirectory=%LOCALAPPDATA%\Android\jdk` puts the JDK (see README). -->
+    <JavaSdkDirectory Condition="'$(JavaSdkDirectory)' == '' and Exists('$(LOCALAPPDATA)\Android\jdk\bin\javac.exe')">$(LOCALAPPDATA)\Android\jdk</JavaSdkDirectory>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <!-- Only trim the framework: Core's pattern JSON uses reflection-based System.Text.Json. -->
+    <TrimMode>partial</TrimMode>
+    <JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DualSenseStudio.Core\DualSenseStudio.Core.csproj" />
+  </ItemGroup>
+
+</Project>

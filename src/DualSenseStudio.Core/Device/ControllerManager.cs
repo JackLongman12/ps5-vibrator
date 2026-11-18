@@ -1,11 +1,10 @@
-using HidSharp;
-
 namespace DualSenseStudio.Core.Device;
 
 /// <summary>Finds a DualSense, keeps it connected, and reconnects after unplug / BT drop.</summary>
 public sealed class ControllerManager : IDisposable
 {
     private readonly object _lock = new();
+    private readonly IControllerTransportProvider _provider;
     private readonly Timer _timer;
     private DualSenseController? _current;
     private bool _disposed;
@@ -16,13 +15,15 @@ public sealed class ControllerManager : IDisposable
     /// <summary>Raised on a background thread when a controller connects or disconnects.</summary>
     public event Action? ConnectionChanged;
 
-    public ControllerManager()
+    /// <summary>Uses HidSharp (Windows).</summary>
+    public ControllerManager() : this(new HidSharpTransportProvider()) { }
+
+    public ControllerManager(IControllerTransportProvider provider)
     {
-        DeviceList.Local.Changed += OnDeviceListChanged;
+        _provider = provider;
+        _provider.DevicesChanged += TryConnect;
         _timer = new Timer(_ => TryConnect(), null, 0, 1500);
     }
-
-    private void OnDeviceListChanged(object? sender, DeviceListChangedEventArgs e) => TryConnect();
 
     public void TryConnect()
     {
@@ -32,29 +33,22 @@ public sealed class ControllerManager : IDisposable
             if (_disposed || _current != null) return;
             try
             {
-                var candidates = DeviceList.Local.GetHidDevices()
-                    .Where(DualSenseController.IsDualSense)
-                    .OrderBy(d => d.GetMaxInputReportLength() > 64 ? 1 : 0) // prefer USB
-                    .ToList();
-                if (candidates.Count == 0)
+                var t = _provider.TryOpen(out var err);
+                if (t == null)
                 {
-                    LastError = null;
+                    LastError = err;
                     return;
                 }
-                foreach (var d in candidates)
+                var c = DualSenseController.TryOpen(t, out err);
+                if (c == null)
                 {
-                    var c = DualSenseController.TryOpen(d, out var err);
-                    if (c == null)
-                    {
-                        LastError = err;
-                        continue;
-                    }
-                    c.Disconnected += OnDisconnected;
-                    _current = c;
-                    LastError = null;
-                    changed = true;
-                    break;
+                    LastError = err;
+                    return;
                 }
+                c.Disconnected += OnDisconnected;
+                _current = c;
+                LastError = null;
+                changed = true;
             }
             catch (Exception ex)
             {
@@ -88,8 +82,9 @@ public sealed class ControllerManager : IDisposable
             c = _current;
             _current = null;
         }
-        DeviceList.Local.Changed -= OnDeviceListChanged;
+        _provider.DevicesChanged -= TryConnect;
         _timer.Dispose();
         c?.Dispose();
+        _provider.Dispose();
     }
 }

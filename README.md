@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/JackLongman12/ps5-vibrator/actions/workflows/ci.yml/badge.svg)](https://github.com/JackLongman12/ps5-vibrator/actions/workflows/ci.yml)
 
-A Windows app for controlling the PS5 DualSense controller's vibration, adaptive triggers and lights. Play looping vibration presets, record your own patterns by playing the triggers like an instrument, edit them on a timeline, and drive the controller live from the touchpad, motion sensors or your PC's audio.
+A Windows app (with an [Android version](#android)) for controlling the PS5 DualSense controller's vibration, adaptive triggers and lights. Play looping vibration presets, record your own patterns by playing the triggers like an instrument, edit them on a timeline, and drive the controller live from the touchpad, motion sensors or your PC's audio.
 
 ![Presets](docs/presets.png)
 
@@ -32,6 +32,35 @@ The app updates itself. It checks GitHub on start and every 20 minutes, download
   <img src="docs/trigger-lab.png" width="49%" alt="Trigger Lab">
 </p>
 
+## Android
+
+`src/DualSenseStudio.Android` is a .NET for Android app built on the same Core library: the same engine, presets, recorder, editor tools and pattern format. Its UI is written in plain Android views, not MAUI, because the app needs direct access to `UsbManager`, the controller's `InputDevice` vibrators and lights, and raw gamepad events. It has tabs for Presets, Recorder, Library, Triggers, Live, Lights and Device, plus a player bar with intensity, speed and balance controls and a Stop button.
+
+### Install the APK
+
+1. Download `io.github.jacklongman12.dualsensestudio-Signed.apk` from the [latest release](https://github.com/JackLongman12/ps5-vibrator/releases/latest) when one includes it, or build it yourself (see [Build from source](#build-from-source)).
+2. On the phone, allow installing apps from your browser or file manager, then open the APK. Android 8.0 or newer is required, and Android 12 or newer for Bluetooth rumble and lights.
+3. Or install from a PC with `adb install -r io.github.jacklongman12.dualsensestudio-Signed.apk`.
+
+The APK is signed with the .NET debug key. Uninstall it before installing a build signed with a different key.
+
+### Connecting, and what works
+
+| | USB (OTG cable) | Bluetooth |
+|---|---|---|
+| Rumble (presets, recorder, live) | ✅ | ✅ Android 12+ |
+| Adaptive triggers (Trigger Lab, trigger vibration) | ✅ | ❌ |
+| Lightbar colour | ✅ | ✅ Android 12+ |
+| Player LEDs, LED brightness, mute LED | ✅ | ❌ |
+| Sticks, buttons, L2/R2 pressure (recorder) | ✅ | ✅ |
+| Touchpad live play | ✅ | ❌ |
+| Motion live play | ✅ | ⚠️ experimental, only if Android exposes the controller's sensors |
+| Audio reactive | ❌ not on Android | ❌ |
+
+- **USB** gives full support. Plug the DualSense in with a USB-C OTG cable or adapter and accept the *Allow access* prompt. The app claims the HID interface and sends the same raw reports as Windows. While the app holds the controller, Android's own gamepad driver can't use it.
+- **Bluetooth**: Android does not let apps open Bluetooth HID devices raw. The app falls back to Android's built-in DualSense driver: `InputDevice.VibratorManager` for rumble, `LightsManager` for the lightbar, and key/motion events for input. The app labels the features this doesn't cover. Pair the controller in Android's Bluetooth settings (hold Create + PS until it flashes).
+- Patterns are stored in the app's private storage as `*.dspattern.json`, the same format as Windows. Use **Library → Import / Export** to move them between devices.
+
 ## Troubleshooting
 
 - **No vibration or triggers while Steam is open:** Steam Input can take over the controller. Turn off *PlayStation Controller Support* in Steam → Settings → Controller, or close Steam. DS4Windows and DSX can conflict in the same way. The app warns you when any of them are running.
@@ -58,8 +87,27 @@ dotnet run --project src/DualSenseStudio.App
 |---|---|
 | `src/DualSenseStudio.Core` | Platform-neutral code: DualSense HID protocol (USB + Bluetooth with CRC32), the 100 Hz haptics engine, patterns, the recorder, and live sources |
 | `src/DualSenseStudio.App` | WPF (.NET 10) UI, settings, audio capture, and the Velopack updater |
+| `src/DualSenseStudio.Android` | .NET for Android app (`net10.0-android`) built on the same Core |
 | `tests/DualSenseStudio.Core.Tests` | Protocol, encoding, pattern-tool, storage-hardening and recorder tests |
 | `scripts/release.ps1` | Test → build → package → publish a GitHub release (maintainers) |
+
+### Android app
+
+
+```bash
+dotnet workload install android
+```
+
+```powershell
+dotnet build src/DualSenseStudio.Android -t:InstallAndroidDependencies -f net10.0-android "-p:AndroidSdkDirectory=$env:LOCALAPPDATA\Android\Sdk" "-p:JavaSdkDirectory=$env:LOCALAPPDATA\Android\jdk" -p:AcceptAndroidSDKLicenses=True
+```
+
+```bash
+dotnet publish src/DualSenseStudio.Android -f net10.0-android -c Release -o artifacts/android
+```
+
+The second command downloads the Android SDK and a JDK into `%LOCALAPPDATA%\Android`. The project finds that JDK automatically. Building `DualSenseStudio.sln` includes the Android project, so it needs the `android` workload. Without it, build `src/DualSenseStudio.App` directly.
+
 
 To release (maintainers only, needs `gh auth login`):
 
